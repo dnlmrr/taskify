@@ -17,7 +17,8 @@ namespace server
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var connectionString = builder.Configuration.GetConnectionString("DefaltConnection");
+            // Retrieve the connection string from configuration
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<ApplicationContext>(x => x.UseSqlServer(connectionString));
 
             // Add services to the container.

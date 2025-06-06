@@ -29,7 +29,9 @@ namespace server.Controllers
             {
                 return NotFound();
             }
-            return await _context.Subtasks.ToListAsync();
+            return await _context.Subtasks
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         // GET: api/Subtasks/5
@@ -40,7 +42,9 @@ namespace server.Controllers
             {
                 return NotFound();
             }
-            var subtask = await _context.Subtasks.FindAsync(id);
+            var subtask = await _context.Subtasks
+                .AsNoTracking()
+                .FirstOrDefaultAsync(s => s.Id == id);
 
             if (subtask == null)
             {

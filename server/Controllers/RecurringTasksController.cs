@@ -29,7 +29,9 @@ namespace server.Controllers
           {
               return NotFound();
           }
-            return await _context.RecurringTasks.ToListAsync();
+            return await _context.RecurringTasks
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         // GET: api/RecurringTasks/5
@@ -40,7 +42,9 @@ namespace server.Controllers
           {
               return NotFound();
           }
-            var recurringTask = await _context.RecurringTasks.FindAsync(id);
+            var recurringTask = await _context.RecurringTasks
+                .AsNoTracking()
+                .FirstOrDefaultAsync(r => r.Id == id);
 
             if (recurringTask == null)
             {

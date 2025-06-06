@@ -114,7 +114,7 @@ namespace server.Controllers
             var tasks = await tasksQuery
                 .Include(t => t.Labels)
                 .Include(t => t.Subtasks)
-
+                .AsNoTracking()
                 .ToListAsync();
 
             return tasks;
@@ -130,6 +130,7 @@ namespace server.Controllers
             }
             var task = await _context.Tasks
                .Include(task => task.Labels)
+               .AsNoTracking()
                .FirstOrDefaultAsync(t => t.Id == id);
 
             if (task == null)

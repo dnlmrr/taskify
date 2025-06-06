@@ -28,7 +28,7 @@ namespace server.Controllers
             {
                 return NotFound();
             }
-            return await _context.Labels.ToListAsync();
+            return await _context.Labels.AsNoTracking().ToListAsync();
         }
 
         // GET: api/Labels/5
@@ -39,7 +39,7 @@ namespace server.Controllers
             {
                 return NotFound();
             }
-            var label = await _context.Labels.FindAsync(id);
+            var label = await _context.Labels.AsNoTracking().FirstOrDefaultAsync(l => l.Id == id);
 
             if (label == null)
             {
