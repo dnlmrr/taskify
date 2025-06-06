@@ -8,16 +8,13 @@ namespace server.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+        public UserService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
 
         public UserDto GetCurrentUser()
         {
-            var userId = _httpContextAccessor.HttpContext.User.FindFirst("Id")?.Value;
-            var parsedUserId = userId != null ? Guid.Parse(userId) : Guid.Empty;
-
             var email = _httpContextAccessor.HttpContext.User.FindFirst("Email")?.Value;
             var name = _httpContextAccessor.HttpContext.User.FindFirst("Name")?.Value;
 

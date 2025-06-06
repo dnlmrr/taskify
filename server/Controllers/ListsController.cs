@@ -31,7 +31,9 @@ namespace server.Controllers
                 return NotFound();
             }
 
-            return await _context.Lists.ToListAsync();
+            return await _context.Lists
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         // GET: api/Lists/5
@@ -45,7 +47,8 @@ namespace server.Controllers
 
             var list = await _context.Lists
                 .Include(l => l.Tasks!)
-                    .ThenInclude(t => t.Labels!) 
+                    .ThenInclude(t => t.Labels!)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(l => l.Id == id);
 
             if (list == null)

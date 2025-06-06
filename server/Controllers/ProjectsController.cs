@@ -32,7 +32,9 @@ namespace server.Controllers
             {
                 return NotFound();
             }
-            return await _context.Projects.ToListAsync();
+            return await _context.Projects
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         // GET: api/Projects/5
@@ -43,7 +45,9 @@ namespace server.Controllers
             {
                 return NotFound();
             }
-            var project = await _context.Projects.FindAsync(id);
+            var project = await _context.Projects
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             if (project == null)
             {
