@@ -9,12 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import { useSearchParams } from 'next/navigation';
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
-import {
-  LoginFormValues,
-  loginFormSchema,
-  RegisterFormValues,
-  registerFormSchema,
-} from '@/lib/validations/auth-schema';
+import { LoginFormValues, loginFormSchema } from '@/lib/validations/auth-schema';
 
 import {
   Form,
@@ -34,10 +29,7 @@ interface AuthFormProps {
   variant: 'register' | 'login';
 }
 
-type AuthSchemaType = {
-  login: LoginFormValues;
-  register: RegisterFormValues;
-}[AuthFormProps['variant']];
+type AuthSchemaType = LoginFormValues;
 
 function AuthForm({ variant }: AuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -52,8 +44,7 @@ function AuthForm({ variant }: AuthFormProps) {
   } else if (urlError === 'OAuthCallbackError') {
     errorMessage = 'An unexpected error occurred.';
   }
-  const authSchema = variant === 'login' ? loginFormSchema : registerFormSchema;
-  const form = useForm<AuthSchemaType>({ resolver: zodResolver(authSchema) });
+  const form = useForm<AuthSchemaType>({ resolver: zodResolver(loginFormSchema) });
 
   const onSubmit: SubmitHandler<AuthSchemaType> = async (
     data: AuthSchemaType,
@@ -61,16 +52,16 @@ function AuthForm({ variant }: AuthFormProps) {
     try {
       setIsLoading(true);
 
+      const { email, name } = data as LoginFormValues;
+
       if (variant === 'login') {
-        const { email, password } = data as LoginFormValues;
         await signIn('credentials', {
           email,
-          password,
+          name,
           callbackUrl: DEFAULT_LOGIN_REDIRECT,
         });
       } else if (variant === 'register') {
-        const { email, name, password } = data as RegisterFormValues;
-        await registerUser({ email, name, password });
+        await registerUser({ email, name });
         toast.success('Successfully registered. You can now log in.');
       }
     } catch (err) {
@@ -104,55 +95,25 @@ function AuthForm({ variant }: AuthFormProps) {
             </FormItem>
           )}
         />
-        {variant === 'register' && (
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Your name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
         <FormField
           control={form.control}
-          name="password"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="********" type="password" {...field} />
+                <Input placeholder="Your name" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        {variant === 'register' && (
-          <FormField
-            control={form.control}
-            name="confirmPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <Input placeholder="********" type="password" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
         <AuthError message={errorMessage} />
         <Button
           type="submit"
           className="w-full"
           loading={isLoading}
-          disabled={isLoading || variant === 'register'}
+          disabled={isLoading}
           variant="default"
           onClick={form.handleSubmit(onSubmit)}
         >

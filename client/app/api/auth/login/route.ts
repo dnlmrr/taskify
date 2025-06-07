@@ -4,16 +4,16 @@ import { signIn } from '@/lib/auth';
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
 
 export const POST = async (req: Request) => {
-  const { email, password } = await req.json();
+  const { email, name } = await req.json();
 
-  if (!email || !password) {
+  if (!email || !name) {
     return new NextResponse('Missing Fields', { status: 400 });
   }
 
   try {
     await signIn('credentials', {
       email,
-      password,
+      name,
     });
 
     return new Response('Redirect', {

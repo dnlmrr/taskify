@@ -1,13 +1,11 @@
-import bcrypt from 'bcryptjs';
-
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getUserByEmail } from '@/actions/get-user';
 
 export const POST = async (req: Request) => {
-  const { name, email, password } = await req.json();
+  const { name, email } = await req.json();
 
-  if (!name || !email || !password) {
+  if (!name || !email) {
     return new NextResponse('Missing Fields', { status: 400 });
   }
 
@@ -17,13 +15,10 @@ export const POST = async (req: Request) => {
     return new NextResponse('Email exists', { status: 400 });
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-
   const user = await db.user.create({
     data: {
       name,
       email,
-      password: hashedPassword,
     },
   });
 
