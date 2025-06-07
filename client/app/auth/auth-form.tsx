@@ -22,7 +22,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { AuthError } from './auth-error';
-import SocialsActions from './socials-actions';
 import { registerUser } from './register-user';
 
 interface AuthFormProps {
@@ -120,7 +119,6 @@ function AuthForm({ variant }: AuthFormProps) {
           {variant === 'login' ? 'Login' : 'Register'}
         </Button>
       </form>
-      {variant === 'login' && <SocialsActions />}
     </Form>
   );
 }
