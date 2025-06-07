@@ -27,5 +27,5 @@ export const registerUser = async ({ name, email }: UserDetails) => {
     },
   });
 
-  return redirect('/login');
+  return redirect('/auth/login');
 };

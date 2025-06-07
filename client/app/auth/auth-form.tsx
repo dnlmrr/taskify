@@ -22,7 +22,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { AuthError } from './auth-error';
-import SocialsActions from './socials-actions';
 import { registerUser } from './register-user';
 
 interface AuthFormProps {
@@ -81,7 +80,7 @@ function AuthForm({ variant }: AuthFormProps) {
 
   return (
     <Form {...form}>
-      <form className="space-y-4 max-w-sm w-full mx-auto">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-w-sm w-full mx-auto">
         <FormField
           control={form.control}
           name="email"
@@ -115,12 +114,10 @@ function AuthForm({ variant }: AuthFormProps) {
           loading={isLoading}
           disabled={isLoading}
           variant="default"
-          onClick={form.handleSubmit(onSubmit)}
         >
           {variant === 'login' ? 'Login' : 'Register'}
         </Button>
       </form>
-      {variant === 'login' && <SocialsActions />}
     </Form>
   );
 }
