@@ -1,8 +1,8 @@
 import Credentials from 'next-auth/providers/credentials';
 import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
-import bcrypt from 'bcryptjs';
 import type { NextAuthConfig } from 'next-auth';
+import { db } from '@/lib/db';
 import { getUserByEmail } from './actions/get-user';
 
 export default {
@@ -17,18 +17,17 @@ export default {
     }),
     Credentials({
       async authorize(credentials) {
-        const { email, password } = credentials;
+        const { email, name } = credentials;
 
-        const user = await getUserByEmail(email as string);
-        if (!user || !user.password) return null;
+        if (!email || !name) return null;
 
-        const passwordsMatch = await bcrypt.compare(
-          password as string,
-          user.password,
-        );
+        let user = await getUserByEmail(email as string);
 
-        if (passwordsMatch) return user;
-        return null;
+        if (!user) {
+          user = await db.user.create({ data: { email, name } });
+        }
+
+        return user;
       },
     }),
   ],

@@ -1,7 +1,5 @@
 'use server';
 
-import bcrypt from 'bcryptjs';
-
 import { redirect } from 'next/navigation';
 import { db } from '@/lib/db';
 import { getUserByEmail } from '@/actions/get-user';
@@ -9,13 +7,10 @@ import { getUserByEmail } from '@/actions/get-user';
 interface UserDetails {
   name: string;
   email: string;
-  password: string;
 }
 
-export const registerUser = async ({ name, email, password }: UserDetails) => {
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  if (!name || !email || !password) {
+export const registerUser = async ({ name, email }: UserDetails) => {
+  if (!name || !email) {
     throw new Error('Missing fields.');
   }
 
@@ -29,7 +24,6 @@ export const registerUser = async ({ name, email, password }: UserDetails) => {
     data: {
       name,
       email,
-      password: hashedPassword,
     },
   });
 
